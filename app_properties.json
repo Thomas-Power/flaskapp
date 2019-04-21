@@ -1,0 +1,20 @@
+{
+"graph_dir":"./static/",
+"default_actions":[{
+			"action":"time series histogram",
+			"start_date":"2019-01-01"
+		},
+		{
+			"action":"time series gaussian",
+			"start_date":"2019-01-01"
+		},
+		{
+			"action":"colormesh beta relationship",
+			"start_date":"2019-01-01",
+			"symbol_two":"INX"
+		},
+		{
+			"action":"simple time series",
+			"start_date":"2019-01-01"
+	}]
+}
