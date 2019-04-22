@@ -98,10 +98,13 @@ class GraphRequestProcessor:
 		else:
 			self.create_if_not_available(graphs)
 		id_numbers = str(list(graphs["id_number"]))
+		for i in ['[',']','\'',' ']:
+			id_numbers = id_numbers.replace(i, '')
 		return id_numbers
 		
 	def create_default_set(self, ticker_name):
 		for req in self.req_list:
+			req["ticker_name"] = ticker_name
 			req["symbol"] = ticker_name
 			req["symbol_one"] = ticker_name
 			req["id_number"] = str(time.time()).replace('.', '')
@@ -118,6 +121,12 @@ class GraphRequestProcessor:
 					self.create_graph(req)
 			except IndexError:
 				pass
+	
+	def update_graph(self, req):
+		self.db.update_graph(req)
+	
+	def delete_graph(self, id_number):
+		self.db.delete_graph(id_number)
 	
 	def save_graph_request(self, req):
 		req["id_number"] = str(time.time()).replace('.', '')

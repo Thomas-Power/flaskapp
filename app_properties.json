@@ -1,5 +1,5 @@
 {
-"graph_dir":"./static/",
+"graph_dir":"../static/",
 "default_actions":[{
 			"action":"time series histogram",
 			"start_date":"2019-01-01"

@@ -8,9 +8,13 @@ class FlaskDatabaseAdapter:
 	def __init__(self):
 		self.db = FlaskDatabase()
 
-	#inserts time series values into database
+	def update_graph(self, data):
+		variables = json.dumps(data)
+		id_number = data["id_number"]
+		self.db.update([variables, id_number])
+
 	def insert_graph(self, data):
-		ticker_name = data["symbol"]
+		ticker_name = data["ticker_name"]
 		variables = json.dumps(data)
 		id_number = data["id_number"]
 		self.db.insert([ticker_name, variables, id_number])
@@ -19,3 +23,6 @@ class FlaskDatabaseAdapter:
 		data = self.db.select([ticker_name])
 		graphs = pd.DataFrame(data, columns=["ticker_name", "variables", "id_number"])
 		return graphs
+		
+	def delete_graph(self, id_number):
+		self.db.delete([id_number])

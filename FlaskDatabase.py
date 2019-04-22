@@ -20,7 +20,7 @@ class FlaskDatabase:
 		return result
 		
 	def update(self, values):
-		sql = "UPDATE graph_table SET ticker_name = %s, variables = %s WHERE id_number = %s"
+		sql = "UPDATE graph_table SET variables = %s WHERE id_number = %s"
 		self.cursor.execute(sql, values)
 		self.db.commit()
 		
