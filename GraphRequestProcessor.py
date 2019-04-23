@@ -1,3 +1,5 @@
+import sys
+sys.path.append('./fintech-lab')
 from fintechlab.GraphFactory import GraphFactory
 import pandas as pd
 import time
