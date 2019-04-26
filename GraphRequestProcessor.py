@@ -15,12 +15,14 @@ class GraphRequestProcessor:
 		self.graph = GraphFactory()
 		self.options = {
 			"time series histogram":self.time_series_histogram,
+			"time series adjusted gaussian":self.time_series_adjusted_gaussian,
 			"time series gaussian":self.time_series_gaussian,
 			"colormesh beta relationship":self.colormesh_beta_relationship,
 			"beta relationship distribution slice":self.beta_relationship_distribution_slice,
 			"traditional beta relationship":self.traditional_beta_relationship,
 			"simple time series":self.simple_time_series,
-			"series of gaussian probability of divergence from linear regression":self.series_of_gaussian_probability_of_divergence_from_linear_regression
+			"series of gaussian probability of divergence from linear regression":self.series_of_gaussian_probability_of_divergence_from_linear_regression,
+			"mean_return_over_x_days":self.mean_return_over_x_days
 		}
 		properties_file = open('app_properties.json')
 		json_str = properties_file.read()
@@ -30,41 +32,70 @@ class GraphRequestProcessor:
 		if not os.path.exists(self.graph_dir):
 			os.makedirs(self.graph_dir) 
 		
+	def mean_return_over_x_days(self, data):
+		symbol_one = data.get("symbol_one")
+		relate_symbol = data.get("symbol_two")
+		start_date = data.get("start_date")
+		end_date = data.get("end_date")
+		days_scope = int(data.get("days_scope")) if data.get("days_scope") != None else 10
+		linear_regress = data.get("linear_regress")
+		short = data.get("short")
+		leveredge = float(data.get("leveredge")) if data.get("leveredge") != None else 1
+		file_name = self.graph_dir + data.get("id_number") + ".png"
+		self.graph.source_all_mean_returns_over_x_days(symbol_one, start_date, end_date, relate_symbol, linear_regress, days_scope, short, leveredge, file_name=file_name)
+	
 	def time_series_histogram(self, data):
 		symbol = data.get("symbol")
 		start_date = data.get("start_date")
 		end_date = data.get("end_date")
-		bins = data.get("bins") if data.get("bins") != None else 100
+		bins = int(data.get("bins")) if data.get("bins") != None else 100
 		file_name = self.graph_dir + data.get("id_number") + ".png"
 		self.graph.source_time_series_histogram(symbol, start_date, end_date, bins=bins, file_name=file_name)
 		
 	def time_series_gaussian(self, data):
-		symbol = data.get("symbol")
+		symbol_one = data.get("symbol_one")
+		relate_value = data.get("symbol_two")
 		start_date = data.get("start_date")
 		end_date = data.get("end_date")
 		file_name = self.graph_dir + data.get("id_number") + ".png"
-		self.graph.source_time_series_gaussian(symbol, start_date, end_date, file_name=file_name)
+		self.graph.source_time_series_gaussian(symbol, start_date, end_date, relate_value, file_name=file_name)
+		
+	def time_series_adjusted_gaussian(self, data):
+		symbol_one = data.get("symbol_one")
+		relate_value = data.get("symbol_two")
+		start_date = data.get("start_date")
+		end_date = data.get("end_date")
+		file_name = self.graph_dir + data.get("id_number") + ".png"
+		self.graph.source_time_series_adjusted_gaussian(symbol_one, start_date, end_date, relate_value, file_name=file_name)
 		
 	def colormesh_beta_relationship(self, data):
 		symbol_one = data.get("symbol_one")
 		symbol_two = data.get("symbol_two")
 		start_date = data.get("start_date")
 		end_date = data.get("end_date")
-		days_scope = data.get("days_scope") if data.get("days_scope") != None else 5
-		bins = data.get("bins") if data.get("bins") != None else 64
+		days_scope = int(data.get("days_scope")) if data.get("days_scope") != None else 5
+		bins = int(data.get("bins")) if data.get("bins") != None else 64
 		file_name = self.graph_dir + data.get("id_number") + ".png"
 		self.graph.source_colormesh_beta_relationship(symbol_one, symbol_two, start_date, end_date, days_scope, bins, file_name=file_name)
 			
 		
 	def beta_relationship_distribution_slice(self, data):
-		print("check")
+		symbol_one = data.get("symbol_one")
+		symbol_two = data.get("symbol_two")
+		start_date = data.get("start_date")
+		end_date = data.get("end_date")
+		percent_change = data.get("percent_change")
+		days_scope = int(data.get("days_scope")) if data.get("days_scope") != None else 5
+		bins = int(data.get("bins")) if data.get("bins") != None else 64
+		file_name = self.graph_dir + data.get("id_number") + ".png"
+		self.graph.source_beta_relationship_distribution_slice(symbol_one, symbol_two, percent_change, start_date, end_date, days_scope, bins, file_name=file_name)
 		
 	def traditional_beta_relationship(self, data):
 		symbol_one = data.get("symbol_one")
 		symbol_two = data.get("symbol_two")
 		start_date = data.get("start_date")
 		end_date = data.get("end_date")
-		days_scope = data.get("days_scope") if data.get("days_scope") != None else 5
+		days_scope = int(data.get("days_scope")) if data.get("days_scope") != None else 5
 		linear_regress = data.get("linear_regress")
 		file_name = self.graph_dir + data.get("id_number") + ".png"
 		self.graph.source_beta_relationship(symbol_one, symbol_two, start_date, end_date, days_scope, file_name=file_name)
@@ -85,7 +116,7 @@ class GraphRequestProcessor:
 		symbol_two = data.get("symbol_two")
 		start_date = data.get("start_date")
 		end_date = data.get("end_date")
-		days_scope = data.get("days_scope") if data.get("days_scope") != None else 5
+		days_scope = int(data.get("days_scope")) if data.get("days_scope") != None else 5
 		linear_regress = data.get("linear_regress")
 		file_name = self.graph_dir + data.get("id_number") + ".png"
 		if symbol_two is not None:
